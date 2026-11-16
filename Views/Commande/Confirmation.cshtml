@@ -1,0 +1,114 @@
+﻿@model EpicerieAlda.Models.Commande
+@{
+    ViewData["Title"] = "Merci pour votre commande";
+    var client = Model.Client;
+}
+
+<div class="pagePanier">
+    <div class="containerPanier">
+
+        
+        <ol class="etapes">
+            <li class="etape terminee"><span class="pastilleEtape">✓</span><span>Panier</span></li>
+            <li class="etape terminee"><span class="pastilleEtape">✓</span><span>Informations</span></li>
+            <li class="etape terminee"><span class="pastilleEtape">✓</span><span>Confirmation</span></li>
+        </ol>
+
+        
+        <div class="enteteMerci">
+            <div class="iconeMerci">✓</div>
+            <h1 class="titrePanier">Merci pour votre commande !</h1>
+            <p class="texteMerci">
+                Alda vous remercie de faire vos achats avec nous.<br />
+                Nous avons bien reçu votre commande, qui est maintenant en cours de traitement.
+            </p>
+        </div>
+
+        <div class="grilleMerci">
+
+            
+            <section class="carteFormulaire">
+                <h2 class="titreCarte">
+                    <span class="numeroCarte">👤</span> Informations du client
+                </h2>
+
+                @if (client != null)
+                {
+                    <dl class="listeInfos">
+                        <dt>Numéro de client</dt>
+                        <dd>@client.Id</dd>
+
+                        <dt>Nom</dt>
+                        <dd>@client.Prenom @client.Nom</dd>
+
+                        <dt>Adresse</dt>
+                        <dd>
+                            @client.NumeroCivique @client.NomRue
+                            @if (!string.IsNullOrEmpty(client.NumeroAppartement))
+                            {
+                                <text>, app. @client.NumeroAppartement</text>
+                            }
+                            <br />
+                            @client.Ville (@client.Province) @client.CodePostal.ToUpper()<br />
+                            @client.Pays
+                        </dd>
+
+                        <dt>Téléphone</dt>
+                        <dd>@client.Telephone</dd>
+
+                        <dt>Email</dt>
+                        <dd>@client.Email</dd>
+                    </dl>
+                }
+            </section>
+
+            @* ===== Carte : la commande ===== *@
+            <section class="carteFormulaire">
+                <div class="enteteCommande">
+                    <h2 class="titreCarte">
+                        <span class="numeroCarte">🧾</span> Commande n° @Model.Id
+                    </h2>
+                    <span class="badgeStatut">@Model.Statut</span>
+                </div>
+
+                <p class="dateCommande">
+                    Passée le @Model.DateCommande.ToString("dd/MM/yyyy") à @Model.DateCommande.ToString("HH:mm")
+                </p>
+
+                <div class="listeArticlesMerci">
+                    @foreach (var ligne in Model.CommandeProduit)
+                    {
+                        <div class="articleMerci">
+                            <img src="@ligne.Produit!.ImageUrl" alt="@ligne.Produit.Nom" />
+                            <div class="infoArticleMerci">
+                                <span class="nomArticle">@ligne.Produit.Nom</span>
+                                <span class="detailArticle">@ligne.Quantite × @ligne.PrixUnitaire.ToString("0.00") $</span>
+                            </div>
+                            <span class="prixArticle">@ligne.SousTotal.ToString("0.00") $</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="ligneTotal">
+                    <span>Articles (@Model.NombreArticles)</span>
+                    <span>@Model.Total.ToString("0.00") $</span>
+                </div>
+                <div class="ligneTotal">
+                    <span>Livraison</span>
+                    <span class="gratuit">Gratuite</span>
+                </div>
+                <div class="ligneTotal grandTotal">
+                    <span>Total</span>
+                    <span>@Model.Total.ToString("0.00") $</span>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="actionsMerci">
+            <a asp-controller="Produit" asp-action="Index" class="boutonPrincipal">Continuer mes achats</a>
+            <a asp-controller="Acceuil" asp-action="Index" class="lienProduits">Retour à l'accueil</a>
+        </div>
+
+    </div>
+</div>

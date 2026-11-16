@@ -1,0 +1,94 @@
+﻿@model EpicerieAlda.Models.Commande
+@{
+    ViewData["Title"] = "Mon panier";
+}
+
+<div class="pagePanier">
+    <div class="containerPanier">
+
+        @if (Model.CommandeProduit.Count == 0)
+        {
+            
+            <div class="panierVide">
+                <img src="~/Image/panier.jpg" alt="" class="imagePanierVide" />
+                <h1 class="titrePanier">Votre panier est vide</h1>
+                <p class="phraseProduit">Découvrez nos produits frais et ajoutez-les à votre panier.</p>
+                <a asp-controller="Produit" asp-action="Index" class="boutonPrincipal">Voir nos produits</a>
+            </div>
+        }
+        else
+        {
+            <h1 class="titrePanier">
+                Panier
+            </h1>
+
+            <div class="grillePanier">
+
+                <section class="listePanier">
+                    @foreach (var ligne in Model.CommandeProduit)
+                    {
+                        <div class="containerLignePanier">
+
+                            <div class="ImagePanier">
+                                <img src="@ligne.Produit!.ImageUrl" alt="@ligne.Produit.Nom" class="imageLignePanier" />
+                            </div>
+
+                            <div class="infoPanier">
+                                <h3>@ligne.Produit.Nom</h3>
+                                @if (!string.IsNullOrEmpty(ligne.Produit.Description))
+                                {
+                                    <small class="desciptionProduit">@ligne.Produit.Description</small>
+                                }
+                                <p class="prixUnitaire">@ligne.PrixUnitaire.ToString("0.00") $ / unité</p>
+
+                                <div class="actionsPanier">
+                                    <form asp-controller="Commande" asp-action="ModifierQuantite" method="post" class="formQuantite">
+                                        <input type="hidden" name="ligneId" value="@ligne.Id" />
+                                        <button type="submit" name="quantite" value="@(ligne.Quantite - 1)" class="boutonQuantite" aria-label="Diminuer la quantité">−</button>
+                                        <span class="quantiteAffichee">@ligne.Quantite</span>
+                                        <button type="submit" name="quantite" value="@(ligne.Quantite + 1)" class="boutonQuantite" aria-label="Augmenter la quantité">+</button>
+                                    </form>
+
+                                    <form asp-controller="Commande" asp-action="SupprimerLigne" method="post">
+                                        <input type="hidden" name="ligneId" value="@ligne.Id" />
+                                        <button type="submit" class="supprimerBouton">Supprimer</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="sousTotalPanier">
+                                @ligne.SousTotal.ToString("0.00") $
+                            </div>
+
+                        </div>
+                    }
+                </section>
+
+               
+                <aside class="totalPanier">
+                    <h2 class="titreResume">Résumé de la commande</h2>
+
+                    <div class="ligneTotal">
+                        <span>Articles (@Model.NombreArticles)</span>
+                        <span>@Model.Total.ToString("0.00") $</span>
+                    </div>
+                    <div class="ligneTotal">
+                        <span>Livraison</span>
+                        <span class="gratuit">Gratuite</span>
+                    </div>
+                    <div class="ligneTotal grandTotal">
+                        <span>Total</span>
+                        <span>@Model.Total.ToString("0.00") $</span>
+                    </div>
+
+                    
+                    <a asp-controller="Commande" asp-action="Confirmer" class="boutonPrincipal boutonCommande">Passer la commande</a>
+
+                    <a asp-controller="Produit" asp-action="Index" class="lienProduits">← Continuer mes achats</a>
+                </aside>
+
+            </div>
+        }
+
+    </div>
+</div>

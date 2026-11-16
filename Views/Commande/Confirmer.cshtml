@@ -1,0 +1,166 @@
+﻿@model EpicerieAlda.Models.Client
+@{
+    ViewData["Title"] = "Vos informations";
+    decimal total = (decimal)(ViewData["Total"] ?? 0m);
+}
+
+<div class="pagePanier">
+    <div class="containerPanier">
+
+        @* ===== Barre d'étapes ===== *@
+        <ol class="etapes">
+            <li class="etape terminee">
+                <span class="pastilleEtape">✓</span>
+                <span>Panier</span>
+            </li>
+            <li class="etape active">
+                <span class="pastilleEtape">2</span>
+                <span>Informations</span>
+            </li>
+            <li class="etape">
+                <span class="pastilleEtape">3</span>
+                <span>Confirmation</span>
+            </li>
+        </ol>
+
+        <h1 class="titrePanier">Vos informations</h1>
+        <p class="sousTitreConfirmer">Plus qu'une étape ! Indiquez où livrer votre commande.</p>
+
+        <form asp-action="Confirmer" method="post" class="grillePanier">
+
+            @* ===== Colonne gauche : le formulaire ===== *@
+            <div class="colonneFormulaire">
+
+                <div asp-validation-summary="ModelOnly" class="alerteErreur"></div>
+
+                @* --- Carte 1 : Coordonnées --- *@
+                <section class="carteFormulaire">
+                    <h2 class="titreCarte">
+                        <span class="numeroCarte">1</span> Coordonnées
+                    </h2>
+
+                    <div class="rangeeChamps">
+                        <div class="champ">
+                            <label asp-for="Prenom"></label>
+                            <input asp-for="Prenom" placeholder="Marie" autocomplete="given-name" />
+                            <span asp-validation-for="Prenom" class="erreurChamp"></span>
+                        </div>
+                        <div class="champ">
+                            <label asp-for="Nom"></label>
+                            <input asp-for="Nom" placeholder="Tremblay" autocomplete="family-name" />
+                            <span asp-validation-for="Nom" class="erreurChamp"></span>
+                        </div>
+                    </div>
+
+                    <div class="rangeeChamps">
+                        <div class="champ">
+                            <label asp-for="Telephone"></label>
+                            <input asp-for="Telephone" placeholder="514-555-1234" autocomplete="tel" />
+                            <span asp-validation-for="Telephone" class="erreurChamp"></span>
+                        </div>
+                        <div class="champ">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" placeholder="marie@exemple.com" autocomplete="email" />
+                            <span asp-validation-for="Email" class="erreurChamp"></span>
+                        </div>
+                    </div>
+                </section>
+
+                @* --- Carte 2 : Adresse de livraison --- *@
+                <section class="carteFormulaire">
+                    <h2 class="titreCarte">
+                        <span class="numeroCarte">2</span> Adresse de livraison
+                    </h2>
+
+                    <div class="rangeeChamps rangeeAdresse">
+                        <div class="champ">
+                            <label asp-for="NumeroCivique"></label>
+                            <input asp-for="NumeroCivique" placeholder="1234" />
+                            <span asp-validation-for="NumeroCivique" class="erreurChamp"></span>
+                        </div>
+                        <div class="champ">
+                            <label asp-for="NomRue"></label>
+                            <input asp-for="NomRue" placeholder="rue Sainte-Catherine" />
+                            <span asp-validation-for="NomRue" class="erreurChamp"></span>
+                        </div>
+                        <div class="champ">
+                            <label asp-for="NumeroAppartement"></label>
+                            <input asp-for="NumeroAppartement" placeholder="Facultatif" />
+                        </div>
+                    </div>
+
+                    <div class="rangeeChamps">
+                        <div class="champ">
+                            <label asp-for="Ville"></label>
+                            <input asp-for="Ville" placeholder="Montréal" autocomplete="address-level2" />
+                            <span asp-validation-for="Ville" class="erreurChamp"></span>
+                        </div>
+                        <div class="champ">
+                            <label asp-for="Province"></label>
+                            <select asp-for="Province">
+                                <option value="">Choisir…</option>
+                                <option>Québec</option>
+                                <option>Ontario</option>
+                                <option>Nouveau-Brunswick</option>
+                                <option>Nouvelle-Écosse</option>
+                                <option>Île-du-Prince-Édouard</option>
+                                <option>Terre-Neuve-et-Labrador</option>
+                                <option>Manitoba</option>
+                                <option>Saskatchewan</option>
+                                <option>Alberta</option>
+                                <option>Colombie-Britannique</option>
+                            </select>
+                            <span asp-validation-for="Province" class="erreurChamp"></span>
+                        </div>
+                    </div>
+
+                    <div class="rangeeChamps">
+                        <div class="champ">
+                            <label asp-for="CodePostal"></label>
+                            <input asp-for="CodePostal" placeholder="H2X 1Y4" autocomplete="postal-code" />
+                            <span asp-validation-for="CodePostal" class="erreurChamp"></span>
+                        </div>
+                        <div class="champ">
+                            <label asp-for="Pays"></label>
+                            <input asp-for="Pays" placeholder="Canada" autocomplete="country-name" />
+                            <span asp-validation-for="Pays" class="erreurChamp"></span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            @* ===== Colonne droite : le résumé ===== *@
+            <aside class="totalPanier">
+                <h2 class="titreResume">Résumé de la commande</h2>
+
+                <div class="ligneTotal">
+                    <span>Sous-total</span>
+                    <span>@total.ToString("0.00") $</span>
+                </div>
+                <div class="ligneTotal">
+                    <span>Livraison</span>
+                    <span class="gratuit">Gratuite</span>
+                </div>
+                <div class="ligneTotal grandTotal">
+                    <span>Total</span>
+                    <span>@total.ToString("0.00") $</span>
+                </div>
+
+                <button type="submit" class="boutonPrincipal boutonCommande boutonConfirmer">
+                    Confirmer votre commande
+                </button>
+
+                <p class="noteSecurite">🔒 Vos informations restent confidentielles.</p>
+
+                <a asp-action="Index" class="lienProduits">← Retour au panier</a>
+            </aside>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
